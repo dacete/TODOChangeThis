@@ -1,0 +1,30 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+int _Width;
+int _Width1;
+int Border;
+RWStructuredBuffer<float> Result; 
+
+
+[numthreads(8,8,8)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    // TODO: insert actual code here!
+    int idx = id.x + id.y * _Width + id.z * _Width * _Width;
+    if(id.x < Border || id.x>=_Width1 ||id.y < Border || id.y>=_Width1 ||id.z < Border || id.z>=_Width1){
+        Result[idx] = 300.0f;
+	}
+    else{
+        if(id.x + id.y > 128){
+      Result[idx] = 300.0f;  
+		}else{
+      Result[idx] = -3.0f;  
+		}
+        }
+
+
+
+}
