@@ -5,7 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TestingStuff.unity
     guid: b4f25c30d37241944b6201e0c1ee2097
+  - enabled: 1
+    path: Assets/Mirror/Examples/Chat/Scenes/Main.unity
+    guid: f4e8d4de4484e44bba666f2d1f66c73e
   m_configObjects: {}

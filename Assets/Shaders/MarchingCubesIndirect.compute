@@ -2,10 +2,10 @@
   struct Vert
   {
     float4 position;
-    float3 normal;
-    float dummy; // TODO: faster with or without this padding?
+     float3 normal;
+     float color; // TODO: faster with or without this padding?
   };
-  
+
   float _Target;
 
 int _Width, _Height, _Depth, _Border;
@@ -16,8 +16,8 @@ StructuredBuffer<int> _TriangleConnectionTable;
 StructuredBuffer<int> _CubeEdgeFlags;
 
 StructuredBuffer<float> _Voxels;
+StructuredBuffer<float> _VoxelTypes;
 
-StructuredBuffer<float3> _Normals;
 static int2 edgeConnection[12] =
 {
     int2(0,1), int2(1,2), int2(2,3), int2(3,0), int2(4,5), int2(5,6), int2(6,7), int2(7,4), int2(0,4), int2(1,5), int2(2,6), int2(3,7)
@@ -90,9 +90,8 @@ float3 SampleBilinear(StructuredBuffer<float3> buffer, float3 uv)
 	return z0 * (1.0f-fy) + z1 * fy;
 
 }
-  struct Triangle
-  {
-    Vert verts[3];
+  struct Triangle{
+  Vert verts[3];
   };
   AppendStructuredBuffer<Triangle> _Buffer;
   struct DrawCallArgsBuffer
@@ -161,9 +160,7 @@ float3 SampleBilinear(StructuredBuffer<float3> buffer, float3 uv)
 
           float3 position = edgeVertex[v];
 
-          verts[j].position = float4(position - centre, 1.0) / (float)_Width;
-          //verts[j].normal = SampleBilinear(_Normals, position);
-          //verts[j].normal = _Normals[idx];
+          verts[j].position = float4(position, 1.0) / (float)_Width;
         }
 
         float3 u = verts[0].position - verts[1].position;
@@ -172,6 +169,9 @@ float3 SampleBilinear(StructuredBuffer<float3> buffer, float3 uv)
         norm.x = u.y*v.z - u.z*v.y;
         norm.y = u.z*v.x - u.x*v.z;
         norm.z = u.x*v.y - u.y*v.x;
+        verts[0].color = _VoxelTypes[idx];
+        verts[1].color = _VoxelTypes[idx];
+        verts[2].color = _VoxelTypes[idx];
         verts[0].normal = norm;
         verts[1].normal = norm;
         verts[2].normal = norm;
